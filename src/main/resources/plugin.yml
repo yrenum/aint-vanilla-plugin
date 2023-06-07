@@ -1,0 +1,7 @@
+name: AintVanilla
+version: 1.0.0
+main: io.github.samusoff.AintVanilla
+description: This ain't vanilla
+authors: [yrenum, samusoff]
+website: https://github.com
+api-version: 1.19
