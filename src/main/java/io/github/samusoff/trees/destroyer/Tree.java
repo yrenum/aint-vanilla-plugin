@@ -1,6 +1,7 @@
 package io.github.samusoff.trees.destroyer;
 
 import io.github.samusoff.AintVanilla;
+import io.papermc.paper.event.block.BlockBreakBlockEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
@@ -14,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Tree {
+
+    private boolean trigger = true;
 
     private static final Material[] allLogTypes = {Material.ACACIA_LOG, Material.OAK_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG, Material.SPRUCE_LOG};
     private List<Block> logs;
@@ -45,8 +48,16 @@ public class Tree {
     }
 
     public void destroyIt(Player player) {
-        for(Block log: logs) {
-            log.breakNaturally();
+        // to avoid recursive calling
+        if(trigger) {
+            trigger = false;
+            for (Block log : logs) {
+                BlockBreakEvent event = new BlockBreakEvent(log, player);
+                Bukkit.getPluginManager().callEvent(event);
+
+                log.breakNaturally();
+            }
+            trigger = true;
         }
     }
 
@@ -55,3 +66,4 @@ public class Tree {
     }
 
 }
+
